@@ -1,24 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
+import React, { useEffect, useState } from "react";
+import httpClient from "./utils";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 function App() {
+  const [vidlist, setVidlist] = useState([]);
+
+  useEffect(() => {
+    httpClient
+      .GET("/videos", false, {})
+      .then((data) => {
+        setVidlist(data.data);
+      })
+      .catch((err) => {});
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="">
+      {vidlist.map((item, i) => (
+        <>
+          <Link key={i} to={`/video/${item._id}`}>
+            {item.title}
+          </Link>
+          <br />
+        </>
+      ))}
     </div>
   );
 }
